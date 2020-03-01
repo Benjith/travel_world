@@ -152,6 +152,8 @@ class _RegisterFormState extends State<RegisterForm> {
               .toJson(),
           TableName.user);
       clear();
+      Navigator.pop(context);
+
     }
   }
 

@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:travel_world/datamodel/agency.dart';
 import 'package:travel_world/datamodel/categories.dart';
+import 'package:travel_world/screens/agency_info.dart';
+import 'package:travel_world/screens/category_info.dart';
+
+import '../appinfo.dart';
 
 class DashboardScreen extends StatefulWidget {
   @override
@@ -8,63 +12,39 @@ class DashboardScreen extends StatefulWidget {
 }
 
 class _DashboardScreenState extends State<DashboardScreen> {
-  List<Agency> agencyNames = [
-    Agency(
-        image:
-            'https://imgak.mmtcdn.com/pwa_v3/pwa_hotel_assets/header/mmtLogoWhite.png',
-        location: 'India',
-        name: 'Make My Trip'),
-    Agency(
-        image:
-            'https://imgak.mmtcdn.com/pwa_v3/pwa_hotel_assets/header/mmtLogoWhite.png',
-        location: 'India',
-        name: 'Make My Trip'),
-    Agency(
-        image:
-            'https://imgak.mmtcdn.com/pwa_v3/pwa_hotel_assets/header/mmtLogoWhite.png',
-        location: 'India',
-        name: 'Make My Trip'),
-    Agency(
-        image:
-            'https://imgak.mmtcdn.com/pwa_v3/pwa_hotel_assets/header/mmtLogoWhite.png',
-        location: 'India',
-        name: 'Make My Trip'),
-  ];
-  List<Categories> categoryNames = [
-    Categories(
-        image:
-            'https://img.traveltriangle.com/blog/wp-content/uploads/2019/01/cover-final.jpg',
-        name: 'Honeymoon',
-        rate: 1998.00),
-    Categories(
-        image:
-            'https://english.mathrubhumi.com/polopoly_fs/1.3339696.1543125725!/image/image.jpg_gen/derivatives/landscape_894_577/image.jpg',
-        name: 'Munnar Trkking',
-        rate: 399.00),
-    Categories(
-        image:
-            'https://english.mathrubhumi.com/polopoly_fs/1.3339696.1543125725!/image/image.jpg_gen/derivatives/landscape_894_577/image.jpg',
-        name: 'Munnar Trkking',
-        rate: 399.00),
-    Categories(
-        image:
-            'https://english.mathrubhumi.com/polopoly_fs/1.3339696.1543125725!/image/image.jpg_gen/derivatives/landscape_894_577/image.jpg',
-        name: 'Munnar Trkking',
-        rate: 399.00),
-    Categories(
-        image:
-            'https://english.mathrubhumi.com/polopoly_fs/1.3339696.1543125725!/image/image.jpg_gen/derivatives/landscape_894_577/image.jpg',
-        name: 'Munnar Trkking',
-        rate: 399.00),
-    Categories(
-        image:
-            'https://english.mathrubhumi.com/polopoly_fs/1.3339696.1543125725!/image/image.jpg_gen/derivatives/landscape_894_577/image.jpg',
-        name: 'Munnar Trkking',
-        rate: 399.00),
-  ];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: <Widget>[
+            DrawerHeader(
+              child: Center(
+                child: Column(
+                  children: <Widget>[
+                    CircleAvatar(
+                      radius: 50,
+                      child: Icon(Icons.person),
+                    ),
+                    Text(AppInfo.loggedInUser.username)
+                  ],
+                ),
+              ),
+              decoration: BoxDecoration(
+                color: Colors.greenAccent,
+              ),
+            ),
+            ListTile(
+              title: Text('Profile'),
+              onTap: () {
+                // Update the state of the app.
+                // ...
+              },
+            ),
+          ],
+        ),
+      ),
       appBar: AppBar(
         title: const Text('Welcome'),
         centerTitle: true,
@@ -97,7 +77,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
               child: ListView.builder(
                 scrollDirection: Axis.horizontal,
                 primary: false,
-                itemCount: categoryNames == null ? 0 : categoryNames.length,
+                itemCount: AppInfo.categoryNames == null
+                    ? 0
+                    : AppInfo.categoryNames.length,
                 itemBuilder: (BuildContext context, int index) {
                   // Map place = places.reversed.toList()[index];
                   return Padding(
@@ -111,18 +93,35 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           children: <Widget>[
                             ClipRRect(
                               borderRadius: BorderRadius.circular(10),
-                              child: Image.network(
-                                categoryNames[index].image,
-                                height: 178,
-                                width: 140,
-                                fit: BoxFit.cover,
+                              child: Hero(
+                                tag: AppInfo.categoryNames[index].image,
+                                child: Image.network(
+                                  AppInfo.categoryNames[index].image,
+                                  height: 178,
+                                  width: 140,
+                                  fit: BoxFit.cover,
+                                  // frameBuilder: (BuildContext context,
+                                  //     Widget child,
+                                  //     int frame,
+                                  //     bool wasSynchronouslyLoaded) {
+                                  //   return Padding(
+                                  //     padding: EdgeInsets.all(8.0),
+                                  //     child: child,
+                                  //   );
+                                  // },
+                                  loadingBuilder: (BuildContext context,
+                                      Widget child,
+                                      ImageChunkEvent loadingProgress) {
+                                    return Center(child: child);
+                                  },
+                                ),
                               ),
                             ),
                             // SizedBox(height: 7),
                             Container(
                               alignment: Alignment.centerLeft,
                               child: Text(
-                                categoryNames[index].name,
+                                AppInfo.categoryNames[index].name,
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontSize: 15,
@@ -135,7 +134,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                             Container(
                               alignment: Alignment.centerLeft,
                               child: Text(
-                                categoryNames[index].rate.toString(),
+                                AppInfo.categoryNames[index].rate.toString(),
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontSize: 13,
@@ -149,137 +148,132 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         ),
                       ),
                       onTap: () {
-                        // Navigator.of(context).push(
-                        //   MaterialPageRoute(
-                        //     builder: (BuildContext context){
-                        //       return Details();
-                        //     },
-                        //   ),
-                        // );
+                        // AppInfo.selectedCategory = AppInfo.categoryNames[index];
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (BuildContext context) {
+                              return CategoryInfo(
+                                category: AppInfo.categoryNames[index],
+                              );
+                            },
+                          ),
+                        );
                       },
                     ),
                   );
                 },
               ),
             ),
-
-            ListView.builder(
-              primary: false,
-              // physics: NeverScrollableScrollPhysics(),
-              shrinkWrap: true,
-              itemCount: agencyNames == null ? 0 : agencyNames.length,
-              itemBuilder: (BuildContext context, int index) {
-                Agency place = agencyNames[index];
-                return InkWell(
-                  child: Container(
-                    height: 70,
+            Expanded(
+              child: ListView.builder(
+                primary: false,
+                // physics: NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
+                itemCount: AppInfo.agencyNames == null
+                    ? 0
+                    : AppInfo.agencyNames.length,
+                itemBuilder: (BuildContext context, int index) {
+                  Agency place = AppInfo.agencyNames[index];
+                  return InkWell(
+                    child: Container(
+                      height: 70,
 //                    color: Colors.red,
-                    child: Row(
-                      children: <Widget>[
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(5),
-                          child: Image.asset(
-                            "${place.image}",
-                            height: 70,
-                            width: 70,
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                        SizedBox(width: 15),
-                        Container(
-                          height: 80,
-                          width: MediaQuery.of(context).size.width - 130,
-                          child: ListView(
-                            primary: false,
-                            physics: NeverScrollableScrollPhysics(),
-                            shrinkWrap: true,
-                            children: <Widget>[
-                              Container(
-                                alignment: Alignment.centerLeft,
-                                child: Text(
-                                  "${place.name}",
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.w700,
-                                    fontSize: 14,
-                                  ),
-                                  maxLines: 2,
-                                  textAlign: TextAlign.left,
-                                ),
+                      child: Row(
+                        children: <Widget>[
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(5),
+                            child: Hero(
+                              tag: place.name,
+                              child: Image.network(
+                                "${place.image}",
+                                height: 70,
+                                width: 70,
+                                fit: BoxFit.contain,
                               ),
-                              SizedBox(height: 3),
-                              Row(
-                                children: <Widget>[
-                                  Icon(
-                                    Icons.location_on,
-                                    size: 13,
-                                    color: Colors.blueGrey[300],
-                                  ),
-                                  SizedBox(width: 3),
-                                  Container(
-                                    alignment: Alignment.centerLeft,
-                                    child: Text(
-                                      "${place.location}",
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 13,
-                                        color: Colors.blueGrey[300],
-                                      ),
-                                      maxLines: 1,
-                                      textAlign: TextAlign.left,
+                            ),
+                          ),
+                          SizedBox(width: 15),
+                          Container(
+                            height: 80,
+                            width: MediaQuery.of(context).size.width - 130,
+                            child: ListView(
+                              primary: false,
+                              physics: NeverScrollableScrollPhysics(),
+                              shrinkWrap: true,
+                              children: <Widget>[
+                                Container(
+                                  alignment: Alignment.centerLeft,
+                                  child: Text(
+                                    "${place.name}",
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w700,
+                                      fontSize: 14,
                                     ),
+                                    maxLines: 2,
+                                    textAlign: TextAlign.left,
                                   ),
-                                ],
-                              ),
-                              SizedBox(height: 10),
-                              Container(
-                                alignment: Alignment.centerLeft,
-                                child: Text(
-                                  "158",
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 16,
-                                  ),
-                                  maxLines: 1,
-                                  textAlign: TextAlign.left,
                                 ),
-                              ),
-                            ],
+                                SizedBox(height: 3),
+                                Row(
+                                  children: <Widget>[
+                                    Icon(
+                                      Icons.location_on,
+                                      size: 13,
+                                      color: Colors.blueGrey[300],
+                                    ),
+                                    SizedBox(width: 3),
+                                    Container(
+                                      alignment: Alignment.centerLeft,
+                                      child: Text(
+                                        "${place.location}",
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 13,
+                                          color: Colors.blueGrey[300],
+                                        ),
+                                        maxLines: 1,
+                                        textAlign: TextAlign.left,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(height: 10),
+                                Container(
+                                  alignment: Alignment.centerLeft,
+                                  child: Text(
+                                    "158",
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16,
+                                    ),
+                                    maxLines: 1,
+                                    textAlign: TextAlign.left,
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  onTap: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (BuildContext context) {
-                          // return Details();
-                        },
+                        ],
                       ),
-                    );
-                  },
-                );
-              },
+                    ),
+                    onTap: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (BuildContext context) {
+                            return AgencyInfo(
+                              agency: AppInfo.agencyNames[index],
+                            );
+                          },
+                        ),
+                      );
+                    },
+                  );
+                },
+              ),
             ),
-
-            // Expanded(
-            //     flex: 1,
-            //     child: ListView(
-            //       children:
-            //           agencyNames.map((f) => AgencyCardWidget(f)).toList(),
-            //     ))
           ],
         ),
       ),
     );
-  }
-}
-
-class AgencyCardWidget extends StatelessWidget {
-  final Agency item;
-  AgencyCardWidget(this.item);
-  @override
-  Widget build(BuildContext context) {
-    return Container();
   }
 }

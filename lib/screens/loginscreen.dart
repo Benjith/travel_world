@@ -90,14 +90,17 @@ class _LoginScreenState extends State<LoginScreen> {
                               prefixIcon: Icon(Icons.vpn_key)),
                         ),
                       ),
-                      RaisedButton(
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(5.0)),
-                        color: Colors.green.withRed(50),
-                        onPressed: _checkLogin,
-                        child: Text(
-                          'Login',
-                          style: TextStyle(color: Colors.white),
+                      Hero(
+                        tag: 'login',
+                                              child: RaisedButton(
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(5.0)),
+                          color: Colors.green.withRed(50),
+                          onPressed: _checkLogin,
+                          child: Text(
+                            'Login',
+                            style: TextStyle(color: Colors.white),
+                          ),
                         ),
                       ),
                       FlatButton(
@@ -137,7 +140,7 @@ class _LoginScreenState extends State<LoginScreen> {
       if (data.isNotEmpty) {
         AppInfo.loggedInUser = UserModel.fromJson(data.first);
         // redirect to dashboard
-        Navigator.pushReplacement(
+        Navigator.push(
           context,
           MaterialPageRoute(
             builder: (context) => DashboardScreen(),
